@@ -9,7 +9,6 @@ defmodule EmbercatcherApiWeb.Guardian.AuthPipeline do
   plug :set_user
 
   def set_user(conn, _) do
-    conn
-      |> Plug.Conn.assign(:user,  Guardian.Plug.current_resource(conn))
+    Plug.Conn.assign(conn, :user,  Guardian.Plug.current_resource(conn))
   end
 end

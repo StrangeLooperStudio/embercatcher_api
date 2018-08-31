@@ -1,6 +1,3 @@
-require IEx
-
-
 defmodule EmbercatcherApiWeb.Guardian do
   use Guardian, otp_app: :embercatcher_api
   alias EmbercatcherApi.Account
@@ -38,7 +35,7 @@ defmodule EmbercatcherApiWeb.Guardian do
     # Does password match the one stored in the database?
     case Comeonin.Argon2.checkpw(password, user.encrypted_password) do
       true ->
-        {:ok}
+        :ok
       _ ->
         # No, return an error
         {:error, :unauthorized}

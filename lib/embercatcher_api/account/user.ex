@@ -18,6 +18,7 @@ defmodule EmbercatcherApi.Account.User do
     |> validate_required([:email, :password])
     |> unique_constraint(:email)
     |> put_password_hash
+    |> downcase_email
   end
 
   defp put_password_hash(changeset) do
@@ -31,4 +32,14 @@ defmodule EmbercatcherApi.Account.User do
         changeset
     end
   end
+
+  defp downcase_email(%Ecto.Changeset{valid?: false} = changeset), do: changeset
+
+  defp downcase_email(%Ecto.Changeset{valid?: true} = changeset) do
+    if email = get_change(changeset, :email) do
+      put_change(changeset, :email, String.downcase(email))
+    else
+      changeset
+  end
+end
 end

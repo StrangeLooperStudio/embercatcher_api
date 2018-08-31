@@ -8,7 +8,7 @@ defmodule EmbercatcherApiWeb.SessionController do
 
   def create(conn, %{"session" => session_params}) do
     with %User{} = user <- Account.get_user_by_email!(session_params["email"]),
-         { :ok } <- EmbercatcherApiWeb.Guardian.authenticate(%{user: user, password: session_params["password"]}) do
+        :ok  <- EmbercatcherApiWeb.Guardian.authenticate(%{user: user, password: session_params["password"]}) do
 
       conn = Guardian.Plug.sign_in(conn, EmbercatcherApiWeb.Guardian, user)
 
