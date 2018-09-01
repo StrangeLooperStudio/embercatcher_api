@@ -51,6 +51,22 @@ defmodule EmbercatcherApi.Account do
         ** (Ecto.NoResultsError)
 
     """
+  def get_user_by_email(email), do: Repo.get_by(User, email: email)
+
+  @doc """
+    Gets a single user by email.
+
+    Return nil if the User is not found.
+
+    ## Examples
+
+        iex> get_user_by_email('someone@somewhere.com')
+        %User{}
+
+        iex> get_user!(456)
+        nil
+
+    """
   def get_user_by_email!(email), do: Repo.get_by!(User, email: email)
 
   @doc """

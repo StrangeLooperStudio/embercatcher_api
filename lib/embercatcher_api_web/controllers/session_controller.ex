@@ -7,12 +7,14 @@ defmodule EmbercatcherApiWeb.SessionController do
   action_fallback EmbercatcherApiWeb.FallbackController
 
   def create(conn, %{"session" => session_params}) do
-    with %User{} = user <- Account.get_user_by_email!(session_params["email"]),
+    with %User{} = user <- Account.get_user_by_email(session_params["email"]),
         :ok  <- EmbercatcherApiWeb.Guardian.authenticate(%{user: user, password: session_params["password"]}) do
 
       conn = Guardian.Plug.sign_in(conn, EmbercatcherApiWeb.Guardian, user)
 
       render conn, "show.json-api", data: %{ token: Guardian.Plug.current_token(conn) }, user: user
+    else _ ->
+      {:error, :unauthorized}
     end
   end
 

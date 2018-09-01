@@ -9,8 +9,13 @@ defmodule EmbercatcherApiWeb.SessionControllerTest do
     password: "test"
   }
 
-  @invalid_attrs %{
+  @invalid_password %{
     email: "test@test.com",
+    password: "wtf"
+  }
+
+  @invalid_user %{
+    email: "foo@bar.com",
     password: "wtf"
   }
 
@@ -29,7 +34,13 @@ defmodule EmbercatcherApiWeb.SessionControllerTest do
 
     test "renders errors when password is incorrect", %{conn: conn} do
       fixture(:user)
-      conn2 = post conn, session_path(conn, :create), session: @invalid_attrs
+      conn2 = post conn, session_path(conn, :create), session: @invalid_password
+      assert json_response(conn2, 401)
+    end
+
+    test "renders errors when user is not found", %{conn: conn} do
+      fixture(:user)
+      conn2 = post conn, session_path(conn, :create), session: @invalid_user
       assert json_response(conn2, 401)
     end
   end
