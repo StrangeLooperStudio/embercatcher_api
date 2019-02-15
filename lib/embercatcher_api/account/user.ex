@@ -21,15 +21,16 @@ defmodule EmbercatcherApi.Account.User do
     |> downcase_email
   end
 
-  defp put_password_hash(changeset) do
-    case changeset do
-      %Ecto.Changeset{valid?: true, changes: %{password: pass}} ->
-        change(changeset, %{
-          encrypted_password: Comeonin.Argon2.hashpwsalt(pass),
-          password: nil
-        })
-      _ ->
-        changeset
+  defp put_password_hash(%Ecto.Changeset{valid?: false} = changeset), do: changeset
+
+  defp put_password_hash(%Ecto.Changeset{valid?: true} = changeset) do
+    if password = get_change(changeset, :password) do
+      change(changeset, %{
+        encrypted_password: Comeonin.Argon2.hashpwsalt(password),
+        password: nil
+      })
+    else
+      changeset
     end
   end
 
@@ -40,6 +41,6 @@ defmodule EmbercatcherApi.Account.User do
       put_change(changeset, :email, String.downcase(email))
     else
       changeset
+    end
   end
-end
 end
